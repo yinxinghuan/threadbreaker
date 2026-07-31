@@ -1,0 +1,7 @@
+Threadbreaker contains no third-party runtime code or assets.
+
+The formal curl-noise-spirit-field GPU effect is intentionally NOT bundled in this build.
+
+The three local result-camera JPEGs were generated for this project with OpenAI's built-in image generation workflow on 2026-07-31. Prompts, source PNGs, output mapping, and modifications are recorded in doc/assets.md. They contain no imported third-party artwork.
+
+The square release poster was generated specifically for this project through the Aigram transit image endpoint on 2026-07-31. The exact prompt, endpoint, response URL, and output are recorded in doc/poster-provenance.md. It contains no imported third-party artwork.
