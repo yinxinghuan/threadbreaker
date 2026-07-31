@@ -68,3 +68,9 @@
 - zh/en × 390×844/320×568 READY 与三档结果截图位于 `_qa/ui/crt-thread-*`；`overflowX/Y=0`、媒体自然尺寸正确、console/pageerror=0。
 - reduced-motion 直接显示静态摄像图且 `.crt-vsync` animation 为 none；光学层 pointer-transparent，真实触控仍能启动并拖动炮塔。
 - `src/core.ts` SHA-256 仍为 `1f61937fbfdbbc524bfc3eb6ef0da3db3e347ad079e8b063ea4285e2c122a920`；6/6 确定性与结果隔离测试继续通过。
+## 2026-08-01 CRT / 大图结算复验
+
+- 390×844 与 320×568：READY、CONTAINED、RESIDUE、BREACH，zh/en 完成截图复验。
+- 320×568 结算由原先约半屏以下的照片提升为标题与操作之间的全幅影像；结果信息合并为一条覆盖带。
+- CRT 扫描、荧光栅格、玻璃暗角在 READY 与全部结局可见；reduced-motion 不依赖动画传达状态。
+- 6 项确定性测试与生产构建通过，权威引擎未变化。
