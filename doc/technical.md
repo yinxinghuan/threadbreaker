@@ -20,6 +20,7 @@
 - `tests/world-layer.test.ts`：锁定 `src/core.ts` SHA-256，并验证同一终局快照与任务号完全确定。
 - `_qa/capture.mjs`：真实 CDP touch 路径、touchCancel、双语言/双尺寸与全状态截图。
 - `public/THIRD_PARTY_NOTICES.txt`：声明本版不含第三方运行时代码/素材，也未捆绑正式 GPU curl 实现。
+- `worker/index.js`：自托管部署所需的 frontend-only handler；仅提供 `/api/health`，不创建第二套游戏后端或数据库。
 
 ## 3. 核心模块
 
@@ -44,7 +45,7 @@
 - 调布局与视觉：`src/style.css`、`src/narrow.css` 和 `draw()`；Canvas 权威坐标保持 `360×640`。
 - 调声音映射、限频、主音量与 voice 上限：`src/audio.ts`；不应把音频时钟传入 core。
 - 调回传构图、建议或任务号格式：`src/inspection.ts`；不得从这里改 `Model` 或权威判定。
-- 发布、UUID、身份、榜单、海报：当前刻意没有入口，必须在用户触屏确认 Keep 后另行按平台规范接入。
+- 发布、UUID、身份、榜单、海报：平台代码位于 `src/identity.ts`、`src/leaderboard.js` 与 `src/shared/runtime/`；正式前端由同一 `dist/` 双部署，worker 只报告健康状态。
 ## 2026-08-01 结果显示层
 
 结果层采用三行 Grid：频道标题、弹性摄像画面、操作。结果标题和三项遥测以绝对定位窄带覆盖在画面底缘；预置媒体保持权威结果映射，裁切仅为展示。CRT 光学层不接收输入，也不改变 Canvas 权威运动。
