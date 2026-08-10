@@ -1,14 +1,13 @@
-import { callAigramAPI, isInAigram, telegramId } from "./shared/runtime/bridge.ts";
+import { callAigramAPI, getTelegramId, isInAigramNow } from "./shared/runtime/bridge.ts";
 
 const params = new URLSearchParams(location.search);
 const fallbackAvatar = new URL("./alteru-default-avatar.jpg", document.baseURI).href;
-const isRealPlayer = isInAigram && telegramId !== "__alteru_guest__";
 
 export const playerIdentity = {
-  id: telegramId || "",
+  id: getTelegramId() || "",
   name: params.get("user_name")?.trim() || "AlterU",
   avatar: params.get("avatar_url")?.trim() || fallbackAvatar,
-  isInAigram: isRealPlayer,
+  get isInAigram() { return isInAigramNow(); },
   resolved: false,
 };
 
@@ -19,10 +18,13 @@ export async function resolvePlayerIdentity() {
     Object.assign(playerIdentity, { name: overrideName || "AlterU", avatar: overrideAvatar || fallbackAvatar, resolved: true });
     return playerIdentity;
   }
-  if (isRealPlayer && telegramId) {
+  const currentTelegramId = getTelegramId();
+  const currentIsInAigram = isInAigramNow();
+  playerIdentity.id = currentTelegramId || "";
+  if (currentIsInAigram && currentTelegramId) {
     try {
       const response = await callAigramAPI(
-        `/note/telegram/user/get/info/by/telegram_id?telegram_id=${encodeURIComponent(telegramId)}`,
+        `/note/telegram/user/get/info/by/telegram_id?telegram_id=${encodeURIComponent(currentTelegramId)}`,
         "GET",
       );
       const data = response?.data || {};

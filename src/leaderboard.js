@@ -1,9 +1,8 @@
-import { callAigramAPI, isInAigram, openAigramProfile, telegramId } from "./shared/runtime/bridge.ts";
+import { callAigramAPI, getTelegramId, isInAigramNow, openAigramProfile } from "./shared/runtime/bridge.ts";
 
 const ALTERU_APP_URL = "https://alteru.app";
-// Rank is a shell capability. Do not preflight whether the visitor is a real
-// user; guest-shell handles login/token when list/save is triggered.
-const canUsePlatformRank = isInAigram;
+// Rank actions deliberately have no user-state preflight. guest-shell handles
+// login/token after an explicit leaderboard open or score save reaches it.
 const initial = (name) => ((name || "?").trim().charAt(0) || "?").toUpperCase();
 
 function rowsFrom(response) {
@@ -54,13 +53,14 @@ export class PlatformLeaderboard {
     if (!rows.length) return this.state(this.locale === "zh" ? "还没有隔离记录" : "NO CONTAINMENT RECORDS");
     this.list.replaceChildren();
     rows.forEach((row) => {
-      const self = telegramId && String(row.user_id) === String(telegramId);
+      const currentTelegramId = getTelegramId();
+      const self = currentTelegramId && String(row.user_id) === String(currentTelegramId);
       const item = document.createElement(self ? "div" : "button");
       item.className = `platform-rank__row${self ? " is-self" : ""}`;
       if (!self) {
         item.type = "button";
         item.addEventListener("click", () => {
-          if (canUsePlatformRank && row.user_id) openAigramProfile(String(row.user_id));
+          if (isInAigramNow() && row.user_id) openAigramProfile(String(row.user_id));
         });
         item.setAttribute("aria-label", `打开 ${row.user_name || "玩家"} 的资料`);
       }
@@ -109,7 +109,7 @@ export class PlatformLeaderboard {
   open() {
     this.lastFocused = document.activeElement;
     this.modal.hidden = false;
-    if (!canUsePlatformRank || !this.gameUuid) this.external();
+    if (!this.gameUuid) this.external();
     else {
       this.state(this.locale === "zh" ? "正在读取隔离记录…" : "READING CONTAINMENT RECORDS…");
       this.refresh().catch(() => this.state(this.locale === "zh" ? "排行榜暂不可用" : "RANK UNAVAILABLE"));
@@ -124,7 +124,7 @@ export class PlatformLeaderboard {
 
   async submit(score) {
     const value = Math.max(0, Math.round(score));
-    if (!canUsePlatformRank || !this.gameUuid || value <= 0) return;
+    if (!this.gameUuid || value <= 0) return;
     try {
       await callAigramAPI("/note/aigram/ai/game/rank/score/save", "POST", { session_id: this.gameUuid, score: value });
     } catch {

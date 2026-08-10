@@ -28,6 +28,16 @@ export const telegramId: string | null = _params.get('telegram_id');
 /** True when both `api_origin` and `telegram_id` are present. */
 export const isInAigram: boolean = !!api_origin && !!telegramId;
 
+/** Read shell-owned login state at action time; guest-shell may update it after login. */
+export function isInAigramNow(): boolean {
+  return Boolean((window as any).Aigram?.isInAigram);
+}
+
+export function getTelegramId(): string | null {
+  const current = (window as any).Aigram?.telegramId;
+  return current == null || current === '' ? telegramId : String(current);
+}
+
 // ─── Base64 helpers ───────────────────────────────────────────────────────
 
 function toBase64(str: string): string {

@@ -45,7 +45,8 @@
 - 调布局与视觉：`src/style.css`、`src/narrow.css` 和 `draw()`；Canvas 权威坐标保持 `360×640`。
 - 调声音映射、限频、主音量与 voice 上限：`src/audio.ts`；不应把音频时钟传入 core。
 - 调回传构图、建议或任务号格式：`src/inspection.ts`；不得从这里改 `Model` 或权威判定。
-- 发布、UUID、身份、榜单、海报：平台代码位于 `src/identity.ts`、`src/leaderboard.js` 与 `src/shared/runtime/`；正式前端由同一 `dist/` 双部署，worker 只报告健康状态。
+- 发布、UUID、身份、榜单、海报：平台代码位于 `src/identity.js`、`src/leaderboard.js` 与 `src/shared/runtime/`；正式前端由同一 `dist/` 双部署，worker 只报告健康状态。
+- 用户/资料判断通过 `isInAigramNow()` 实时读取 shell 状态；页面加载不为外部访客预取资料或榜单，主动打开榜单与结算上传不预判登录状态。
 ## 2026-08-01 结果显示层
 
 结果层采用三行 Grid：频道标题、弹性摄像画面、操作。结果标题和三项遥测以绝对定位窄带覆盖在画面底缘；预置媒体保持权威结果映射，裁切仅为展示。CRT 光学层不接收输入，也不改变 Canvas 权威运动。
