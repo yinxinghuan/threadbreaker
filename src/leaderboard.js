@@ -1,7 +1,9 @@
 import { callAigramAPI, isInAigram, openAigramProfile, telegramId } from "./shared/runtime/bridge.ts";
 
 const ALTERU_APP_URL = "https://alteru.app";
-const canUsePlatformRank = isInAigram && telegramId !== "__alteru_guest__";
+// Rank is a shell capability. Do not preflight whether the visitor is a real
+// user; guest-shell handles login/token when list/save is triggered.
+const canUsePlatformRank = isInAigram;
 const initial = (name) => ((name || "?").trim().charAt(0) || "?").toUpperCase();
 
 function rowsFrom(response) {
