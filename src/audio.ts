@@ -32,7 +32,7 @@ export class ThreadbreakerAudio {
 
   setMuted(value: boolean): void {
     this.muted = value;
-    try { localStorage.setItem(MUTE_KEY, value ? '1' : '0'); } catch {}
+    try { alteruLocalStorage.setItem(MUTE_KEY, value ? '1' : '0'); } catch {}
     if (this.master && this.context) {
       this.master.gain.cancelScheduledValues(this.context.currentTime);
       this.master.gain.setTargetAtTime(value ? 0 : 0.2, this.context.currentTime, 0.012);
@@ -127,5 +127,5 @@ export class ThreadbreakerAudio {
 }
 
 function readMuted(): boolean {
-  try { return localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
+  try { return alteruLocalStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
 }

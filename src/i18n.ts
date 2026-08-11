@@ -16,7 +16,7 @@ export function detectLocale(): Locale {
   const params = new URLSearchParams(location.search);
   const query = normalize(params.get('lang') || params.get('locale'));
   if (query) return query;
-  const stored = normalize(localStorage.getItem('game_locale'));
+  const stored = normalize(alteruLocalStorage.getItem('game_locale'));
   if (stored) return stored;
   return normalize(navigator.language) || 'en';
 }
