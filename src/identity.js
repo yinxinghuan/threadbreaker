@@ -1,4 +1,5 @@
 import { callAigramAPI, getTelegramId, isInAigramNow } from "./shared/runtime/bridge.ts";
+import { waitForAigramIdentity } from "./shared/runtime/identity-ready.ts";
 
 const params = new URLSearchParams(location.search);
 const fallbackAvatar = new URL("./alteru-default-avatar.jpg", document.baseURI).href;
@@ -18,8 +19,8 @@ export async function resolvePlayerIdentity() {
     Object.assign(playerIdentity, { name: overrideName || "AlterU", avatar: overrideAvatar || fallbackAvatar, resolved: true });
     return playerIdentity;
   }
-  const currentTelegramId = getTelegramId();
-  const currentIsInAigram = isInAigramNow();
+  const currentTelegramId = await waitForAigramIdentity();
+  const currentIsInAigram = Boolean(currentTelegramId);
   playerIdentity.id = currentTelegramId || "";
   if (currentIsInAigram && currentTelegramId) {
     try {
